@@ -1,3 +1,204 @@
+https://www.youtube.com/watch?v=6jQdZcYY8OY
+
+Frontend Component (Friends)
+
+"use client";
+
+import { useState } from "react";
+
+// This function makes a POST request to the API
+async function makePostRequest() {
+  const res = await fetch(`/api/hello`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: "Jack" }),
+  });
+
+  const data = await res.json();
+  return { data };
+}
+
+export default function Friends() {
+  const [message, setMessage] = useState("");
+  
+  // This function runs when button is clicked
+  const onClick = async () => {
+    const { data } = await makePostRequest();
+    setMessage(data.message);
+  };
+  
+  return (
+    <h1>
+      {" "}
+      Heyy Friends, {message} <button onClick={onClick}> Click Here</button>
+    </h1>
+  );
+}
+
+🚀 Backend API Route (/api/hello)
+typescript
+
+import { NextResponse } from "next/server";
+
+// Handles GET requests to /api/hello
+export async function GET() {
+  return NextResponse.json({ message: "hello from api" });
+}
+
+// Handles POST requests to /api/hello
+export async function POST(req: Request) {
+  const data = await req.json();
+  const { name } = data;
+
+  return NextResponse.json({
+    message: `hello ${name}, this was sent from the api`,
+  });
+}
+
+🔍 What Happens Step by Step:
+1. Initial State
+
+    The page loads showing: "Heyy Friends, "
+
+    The message state is empty ""
+
+2. User Action
+
+    User clicks the "Click Here" button
+
+    The onClick function is triggered
+
+3. API Call Process
+typescript
+
+// Step 1: makePostRequest() is called
+const res = await fetch(`/api/hello`, {
+  method: "POST",                    // POST request
+  headers: {
+    "Content-Type": "application/json", // Sending JSON data
+  },
+  body: JSON.stringify({ name: "Jack" }), // Sending {name: "Jack"}
+});
+
+// Step 2: API receives the request
+const data = await req.json();       // API gets {name: "Jack"}
+const { name } = data;               // name = "Jack"
+
+// Step 3: API responds
+return NextResponse.json({
+  message: `hello ${name}, this was sent from the api`,
+  // becomes: "hello Jack, this was sent from the api"
+});
+
+// Step 4: Frontend receives response
+const data = await res.json();       // data = {message: "hello Jack, ..."}
+
+4. UI Update
+
+    setMessage(data.message) updates state to "hello Jack, this was sent from the api"
+
+    Component re-renders showing: "Heyy Friends, hello Jack, this was sent from the api"
+
+📊 Visual Flow:
+text
+
+User Clicks Button 
+    ↓
+Frontend sends POST to /api/hello with {name: "Jack"}
+    ↓
+API receives {name: "Jack"} 
+    ↓
+API processes and returns {message: "hello Jack, ..."}
+    ↓
+Frontend receives response and updates state
+    ↓
+UI shows: "Heyy Friends, hello Jack, this was sent from the api"
+
+🛠️ Key Concepts Explained:
+Frontend:
+
+    "use client" - Makes this a client-side React component
+
+    useState - Manages component state
+
+    fetch() - Browser API to make HTTP requests
+
+    JSON.stringify() - Converts JavaScript object to JSON string
+
+Backend:
+
+    NextResponse.json() - Helper to send JSON responses
+
+    req.json() - Parses the incoming request body
+
+    Named exports (GET, POST) - Handle different HTTP methods
+
+🎯 What You'll See:
+
+Before Click:
+text
+
+Heyy Friends, [Click Here]
+
+After Click:
+text
+
+Heyy Friends, hello Jack, this was sent from the api [Click Here]
+
+🔄 Try This Experiment:
+
+Modify the frontend to send a different name:
+typescript
+
+// Change this line in makePostRequest():
+body: JSON.stringify({ name: "Sarah" }),
+
+Now when you click the button, it will show:
+text
+
+Heyy Friends, hello Sarah, this was sent from the api
+
+This demonstrates how data flows from frontend → backend → frontend in a complete cycle!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
